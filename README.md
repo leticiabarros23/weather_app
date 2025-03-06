@@ -42,8 +42,8 @@ Antes de começar, certifique-se de ter instalado:
 
 1. **Clone o repositório:**
    ```sh
-   git clone https://github.com/seu-usuario/seu-repositorio.git
-   cd seu-repositorio
+   git clone https://https://github.com/leticiabarros23/weather_app.git
+   cd weather_app
    ```
 2. **Instale as dependências:**
    ```sh
