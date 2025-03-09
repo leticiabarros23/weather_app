@@ -3,12 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import { useTheme } from './themeContext'; // Importe o hook useTheme
 
 export default function FavoritesScreen() {
   const [favoriteCities, setFavoriteCities] = useState([]);
   const navigation = useNavigation();
-
+  const { theme } = useTheme(); // Pega o tema atual
 
   // 🔹 Carregar favoritos do AsyncStorage
   useEffect(() => {
@@ -23,14 +23,11 @@ export default function FavoritesScreen() {
       }
     };
 
-
     // Atualiza a lista sempre que a tela for focada
     const unsubscribe = navigation.addListener('focus', loadFavorites);
 
-
     return unsubscribe;
   }, [navigation]);
-
 
   // 🔹 Remover uma cidade da lista de favoritos
   async function removeFavorite(cityName) {
@@ -43,33 +40,30 @@ export default function FavoritesScreen() {
     }
   }
 
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Cidades Favoritas</Text>
-
+    <View style={[styles.container, theme === 'dark' && styles.darkContainer]}>
+      <Text style={[styles.header, theme === 'dark' && styles.darkText]}>Cidades Favoritas</Text>
 
       {favoriteCities.length === 0 ? (
-        <Text style={styles.emptyText}>Nenhuma cidade favoritada ainda.</Text>
+        <Text style={[styles.emptyText, theme === 'dark' && styles.darkText]}>Nenhuma cidade favoritada ainda.</Text>
       ) : (
         <FlatList
           data={favoriteCities}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <View style={styles.favoriteItem}>
+            <View style={[styles.favoriteItem, theme === 'dark' && styles.darkItem]}>
               {/* 🔹 Exibe apenas o nome da cidade */}
               <TouchableOpacity
                 style={styles.cityButton}
                 onPress={() => navigation.navigate('Clima', { cityName: item.name })}
               >
                 <Feather name="star" size={20} color="gold" />
-                <Text style={styles.cityName}>{item.name}</Text>
+                <Text style={[styles.cityName, theme === 'dark' && styles.darkText]}>{item.name}</Text>
               </TouchableOpacity>
-
 
               {/* 🔹 Botão de remover (ícone de lixeira) */}
               <TouchableOpacity onPress={() => removeFavorite(item.name)}>
-                <Feather name="trash-2" size={20} color="red" />
+                <Feather name="trash-2" size={20} color={theme === 'dark' ? '#fff' : 'red'} />
               </TouchableOpacity>
             </View>
           )}
@@ -79,18 +73,24 @@ export default function FavoritesScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
   },
+  darkContainer: {
+    backgroundColor: '#333',
+  },
   header: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    color: '#000',
+  },
+  darkText: {
+    color: '#fff',
   },
   emptyText: {
     textAlign: 'center',
@@ -108,6 +108,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     elevation: 2,
   },
+  darkItem: {
+    backgroundColor: '#444',
+  },
   cityButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -118,5 +121,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
 

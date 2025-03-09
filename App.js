@@ -4,23 +4,25 @@ import {
   TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Platform 
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Importando as telas
 import FavoritesScreen from './FavoritesScreen';
-import SettingsScreen from './SettingsScreen';
+import ConfiguracaoScreen from './ConfiguracaoScreen'; 
+import { ThemeProvider, useTheme } from './themeContext'; // Importa o contexto do tema
 
 const API_KEY = '3d35324ff41939a57ae1b49008d79924';
 
+// Defina a função ClimaScreen separada do componente de navegação
 function ClimaScreen() {
   const [city, setCity] = useState('');
   const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const navigation = useNavigation();
-
+  const { theme } = useTheme(); // Obtém o tema atual
+ 
   // Buscar a previsão do tempo para a cidade digitada
   async function fetchWeather(cityName) {
     if (!cityName.trim()) {
@@ -50,7 +52,7 @@ function ClimaScreen() {
     setLoading(false);
   }
 
-  // 🔹 Salvar cidade como favorita no AsyncStorage
+  //  Salvar cidade como favorita no AsyncStorage
   async function saveFavoriteCity() {
     if (!weatherData) return;
 
@@ -74,42 +76,42 @@ function ClimaScreen() {
 
   return (
     <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      style={styles.container}
+      behavior={Platform.OS === 'android' ? 'padding' : 'height'} 
+      style={[styles.container, { backgroundColor: theme.background }]} // Aplica o fundo do tema ao container principal
     >
       <ScrollView 
-        contentContainerStyle={styles.scrollView} 
+        contentContainerStyle={[styles.scrollView, { backgroundColor: theme.background }]} // Garante o fundo correto no ScrollView também
         keyboardShouldPersistTaps="handled"
       >
         {/* Input de pesquisa */}
-        <View style={styles.searchContainer}>
+        <View style={[styles.searchContainer, { backgroundColor: theme.inputBackground }]}>
           <TextInput
             placeholder="Pesquisar cidade..."
-            placeholderTextColor="#666"
-            style={styles.input}
+            placeholderTextColor={theme.inputPlaceholder}
+            style={[styles.input, { color: theme.text }]} // Cor do texto conforme tema
             value={city}
             onChangeText={setCity}
           />
           <TouchableOpacity onPress={() => fetchWeather(city)} style={styles.searchButton}>
-            {loading ? <ActivityIndicator color="#000" size={24} /> : <Feather name="search" size={24} color="#000" />}
+            {loading ? <ActivityIndicator color={theme.text} size={24} /> : <Feather name="search" size={24} color={theme.text} />}
           </TouchableOpacity>
         </View>
 
-        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+        {errorMessage && <Text style={[styles.errorText, { color: theme.errorText }]}>{errorMessage}</Text>}
 
         {weatherData && (
-          <View style={styles.weatherCard}>
-            <Text style={styles.cityName}>{weatherData.name}</Text>
-            <Text style={styles.temperature}>{Math.round(weatherData.main.temp)}ºC</Text>
+          <View style={[styles.weatherCard, { backgroundColor: theme.cardBackground }]}>
+            <Text style={[styles.cityName, { color: theme.text }]}>{weatherData.name}</Text>
+            <Text style={[styles.temperature, { color: theme.text }]}>{Math.round(weatherData.main.temp)}ºC</Text>
             <Image
               style={styles.weatherIcon}
               source={{ uri: `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png` }}
             />
-            <Text style={styles.weatherDescription}>{weatherData.weather[0].description}</Text>
+            <Text style={[styles.weatherDescription, { color: theme.text }]}>{weatherData.weather[0].description}</Text>
 
-            {/* 🔹 Botão para salvar a cidade como favorita (sem a estrela) */}
-            <TouchableOpacity style={styles.favoriteButton} onPress={saveFavoriteCity}>
-              <Text style={styles.favoriteText}>Salvar como Favorito</Text>
+            {/* 🔹 Botão para salvar a cidade como favorita */}
+            <TouchableOpacity style={[styles.favoriteButton, { backgroundColor: theme.buttonBackground }]} onPress={saveFavoriteCity}>
+              <Text style={[styles.favoriteText, { color: theme.buttonText }]}>Salvar como Favorito</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -118,42 +120,77 @@ function ClimaScreen() {
   );
 }
 
-const Tab = createBottomTabNavigator();
-
-export default function App() {
+// Componente de navegação separado que utiliza o tema
+function AppNavigator() {
+  const { theme } = useTheme();
+  const Tab = createBottomTabNavigator();
+  
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
-          tabBarStyle: { backgroundColor: '#f7f7f7', borderTopWidth: 0 },
-          tabBarActiveTintColor: '#333',
-          tabBarInactiveTintColor: '#999',
+          tabBarStyle: { 
+            backgroundColor: theme.tabBarBackground || '#f7f7f7', 
+            borderTopWidth: 0 
+          },
+          tabBarActiveTintColor: theme.tabBarActiveColor || '#333',
+          tabBarInactiveTintColor: theme.tabBarInactiveColor || '#999',
+          headerStyle: {
+            backgroundColor: theme.background || '#fff',
+          },
+          headerTintColor: theme.text || '#333',
         }}
       >
         <Tab.Screen 
           name="Clima" 
           component={ClimaScreen} 
-          options={{ tabBarIcon: ({ color }) => <Feather name="cloud" size={24} color={color} /> }} 
+          options={{ 
+            tabBarIcon: ({ color }) => <Feather name="cloud" size={24} color={color} />,
+            headerStyle: {
+              backgroundColor: theme.background || '#fff',
+            },
+            headerTintColor: theme.text || '#333',
+          }} 
         />
         <Tab.Screen 
           name="Favoritos" 
           component={FavoritesScreen} 
-          options={{ tabBarIcon: ({ color }) => <Feather name="star" size={24} color={color} /> }} 
+          options={{ 
+            tabBarIcon: ({ color }) => <Feather name="star" size={24} color={color} />,
+            headerStyle: {
+              backgroundColor: theme.background || '#fff',
+            },
+            headerTintColor: theme.text || '#333',
+          }} 
         />
         <Tab.Screen 
           name="Configurações" 
-          component={SettingsScreen} 
-          options={{ tabBarIcon: ({ color }) => <Feather name="settings" size={24} color={color} /> }} 
+          component={ConfiguracaoScreen} 
+          options={{ 
+            tabBarIcon: ({ color }) => <Feather name="settings" size={24} color={color} />,
+            headerStyle: {
+              backgroundColor: theme.background || '#fff',
+            },
+            headerTintColor: theme.text || '#333',
+          }} 
         />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
 
+// Componente App principal
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppNavigator />
+    </ThemeProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollView: {
     flexGrow: 1,
@@ -166,7 +203,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: 280,
     height: 50,
-    backgroundColor: '#fff',
     paddingHorizontal: 15,
     marginVertical: 20,
     shadowColor: '#000',
@@ -177,19 +213,16 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: '#000',
     fontSize: 16,
   },
   searchButton: {
     padding: 10,
   },
   errorText: {
-    color: 'red',
     fontSize: 16,
     marginVertical: 10,
   },
   weatherCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: 20,
     borderRadius: 15,
     alignItems: 'center',
@@ -203,12 +236,10 @@ const styles = StyleSheet.create({
   cityName: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
   },
   temperature: {
     fontSize: 35,
     fontWeight: '700',
-    color: '#333',
   },
   weatherIcon: {
     width: 100,
@@ -217,7 +248,6 @@ const styles = StyleSheet.create({
   weatherDescription: {
     fontSize: 18,
     textTransform: 'capitalize',
-    color: '#555',
     marginTop: 5,
   },
   favoriteButton: {
