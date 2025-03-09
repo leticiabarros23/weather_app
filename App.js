@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   ActivityIndicator, Image, StyleSheet, Text, TextInput, 
   TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Platform 
@@ -77,18 +77,17 @@ function ClimaScreen() {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'android' ? 'padding' : 'height'} 
-      style={[styles.container, { backgroundColor: theme.background }]} // Aplica o fundo do tema ao container principal
+      style={[styles.container, { backgroundColor: theme.background }]} 
     >
       <ScrollView 
-        contentContainerStyle={[styles.scrollView, { backgroundColor: theme.background }]} // Garante o fundo correto no ScrollView também
+        contentContainerStyle={[styles.scrollView, { backgroundColor: theme.background }]}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Input de pesquisa */}
         <View style={[styles.searchContainer, { backgroundColor: theme.inputBackground }]}>
           <TextInput
             placeholder="Pesquisar cidade..."
             placeholderTextColor={theme.inputPlaceholder}
-            style={[styles.input, { color: theme.text }]} // Cor do texto conforme tema
+            style={[styles.input, { color: theme.text }]}
             value={city}
             onChangeText={setCity}
           />
@@ -109,7 +108,6 @@ function ClimaScreen() {
             />
             <Text style={[styles.weatherDescription, { color: theme.text }]}>{weatherData.weather[0].description}</Text>
 
-            {/* 🔹 Botão para salvar a cidade como favorita */}
             <TouchableOpacity style={[styles.favoriteButton, { backgroundColor: theme.buttonBackground }]} onPress={saveFavoriteCity}>
               <Text style={[styles.favoriteText, { color: theme.buttonText }]}>Salvar como Favorito</Text>
             </TouchableOpacity>
@@ -146,10 +144,6 @@ function AppNavigator() {
           component={ClimaScreen} 
           options={{ 
             tabBarIcon: ({ color }) => <Feather name="cloud" size={24} color={color} />,
-            headerStyle: {
-              backgroundColor: theme.background || '#fff',
-            },
-            headerTintColor: theme.text || '#333',
           }} 
         />
         <Tab.Screen 
@@ -157,10 +151,6 @@ function AppNavigator() {
           component={FavoritesScreen} 
           options={{ 
             tabBarIcon: ({ color }) => <Feather name="star" size={24} color={color} />,
-            headerStyle: {
-              backgroundColor: theme.background || '#fff',
-            },
-            headerTintColor: theme.text || '#333',
           }} 
         />
         <Tab.Screen 
@@ -168,10 +158,6 @@ function AppNavigator() {
           component={ConfiguracaoScreen} 
           options={{ 
             tabBarIcon: ({ color }) => <Feather name="settings" size={24} color={color} />,
-            headerStyle: {
-              backgroundColor: theme.background || '#fff',
-            },
-            headerTintColor: theme.text || '#333',
           }} 
         />
       </Tab.Navigator>
@@ -205,10 +191,6 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 15,
     marginVertical: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 4,
     elevation: 3,
   },
   input: {
@@ -227,10 +209,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     width: 250,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 4,
     elevation: 3,
   },
   cityName: {
@@ -245,23 +223,14 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  weatherDescription: {
-    fontSize: 18,
-    textTransform: 'capitalize',
-    marginTop: 5,
-  },
   favoriteButton: {
     marginTop: 10,
     paddingVertical: 8,
     paddingHorizontal: 15,
-    backgroundColor: '#777',
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   favoriteText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#fff',
   },
 });
