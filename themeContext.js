@@ -17,7 +17,7 @@ const lightTheme = {
 
 const darkTheme = {
   mode: "dark",  // ✅ Adicionado modo para checagem no Switch
-  background: "#000",
+  background: "#292929",
   text: "#fff",
   inputBackground: "#333",
   inputPlaceholder: "#888",
