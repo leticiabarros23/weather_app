@@ -10,8 +10,8 @@ export default function ConfiguracaoScreen() {
       <View style={styles.settingItem}>
         <Text style={[styles.settingText, { color: theme.text }]}>Modo Escuro</Text>
         <Switch
-          value={theme.mode === 'dark'}
-          onValueChange={toggleTheme} 
+          value={theme.mode === "dark"}  // ✅ Agora a checagem usará "mode"
+          onValueChange={toggleTheme}
         />
       </View>
     </View>

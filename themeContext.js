@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const ThemeContext = createContext();
 
 const lightTheme = {
+  mode: "light",  // ✅ Adicionado modo para checagem no Switch
   background: "#fff",
   text: "#000",
   inputBackground: "#eee",
@@ -15,6 +16,7 @@ const lightTheme = {
 };
 
 const darkTheme = {
+  mode: "dark",  // ✅ Adicionado modo para checagem no Switch
   background: "#000",
   text: "#fff",
   inputBackground: "#333",
