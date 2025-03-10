@@ -10,6 +10,7 @@ Este é um aplicativo mobile desenvolvido em **React Native** e **Expo**, que pe
 - ⭐ Adicionar cidades favoritas para acesso rápido.
 - 🗑️ Remover cidades favoritas da lista.
 - 🎨 Interface intuitiva e responsiva com suporte ao Modo Escuro.
+- 🔄 Atualizar manualmente o clima de cidades favoritadas.  
 - 🚀 Suporte para múltiplas cidades e atualização em tempo real.
 
 ---
@@ -75,7 +76,10 @@ Antes de começar, certifique-se de ter instalado:
 
 1. **Pesquisar cidade:** Digite o nome da cidade e pressione o botão de busca.
 2. **Salvar Favoritos:** Clique no botão de salvar para adicionar a cidade na aba de favoritos.
-3. **Remover Favoritos:** Clique no ícone de lixeira para excluir a cidade da lista de favoritos.
+3. **Atualizar Clima Manualmente:** Na tela de favoritos, pressione o botão de atualizar para obter os dados climáticos mais recentes da cidade.
+4. **Remover Favoritos:** Clique no ícone de lixeira para excluir a cidade da lista de favoritos.
+5. **Alternar Modo Claro/Escuro:** Na aba **Configurações**, ative ou desative o **Modo Escuro** conforme sua preferência.  
+
 
 ---
 
