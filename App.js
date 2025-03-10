@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  ActivityIndicator, Image, StyleSheet, Text, TextInput, 
-  TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Platform 
-} from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
