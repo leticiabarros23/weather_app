@@ -9,7 +9,7 @@ Este é um aplicativo mobile desenvolvido em **React Native** e **Expo**, que pe
 - 🔍 Buscar informações climáticas de qualquer cidade.
 - ⭐ Adicionar cidades favoritas para acesso rápido.
 - 🗑️ Remover cidades favoritas da lista.
-- 🎨 Interface intuitiva e responsiva.
+- 🎨 Interface intuitiva e responsiva com suporte ao Modo Escuro.
 - 🚀 Suporte para múltiplas cidades e atualização em tempo real.
 
 ---
