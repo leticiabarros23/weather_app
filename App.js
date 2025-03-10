@@ -86,10 +86,22 @@ function ClimaScreen() {
             placeholderTextColor={theme.inputPlaceholder}
             style={[styles.input, { color: theme.text }]}
             value={city}
-            onChangeText={setCity}
+            onChangeText={(text) => {
+              setCity(text);
+              if (text.trim() === '') {
+                setWeatherData(null); // 🔹 Limpa os dados quando o input está vazio
+                setErrorMessage(null); // 🔹 Remove a mensagem de erro, se houver
+              }
+            }}
           />
+
+          {/* Botão de Pesquisar */}
           <TouchableOpacity onPress={() => fetchWeather(city)} style={styles.searchButton}>
-            {loading ? <ActivityIndicator color={theme.text} size={24} /> : <Feather name="search" size={24} color={theme.text} />}
+            {loading ? (
+              <ActivityIndicator color={theme.text} size={24} />
+            ) : (
+              <Feather name="search" size={24} color={theme.text} />
+            )}
           </TouchableOpacity>
         </View>
 
