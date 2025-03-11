@@ -52,7 +52,7 @@ Antes de começar, certifique-se de ter instalado:
    ```
 3. **Instale pacotes adicionais necessários:**
    ```sh
-   expo install expo-location @react-native-async-storage/async-storage @expo/vector-icons
+   expo install @react-native-async-storage/async-storage @expo/vector-icons
    ```
 4. **Configuração do arquivo `.env`**
    - Crie um arquivo chamado `.env` na raiz do projeto e adicione:
