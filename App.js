@@ -10,7 +10,6 @@ import FavoritesScreen from './FavoritesScreen';
 import ConfiguracaoScreen from './ConfiguracaoScreen'; 
 import { ThemeProvider, useTheme } from './themeContext'; // Importa o contexto do tema
 
-const API_KEY = '3d35324ff41939a57ae1b49008d79924';
 
 // Defina a função ClimaScreen separada do componente de navegação
 function ClimaScreen() {
@@ -19,7 +18,10 @@ function ClimaScreen() {
   const [weatherData, setWeatherData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const { theme } = useTheme(); // Obtém o tema atual
- 
+  
+  const api = process.env.BASE_URL
+  const key = process.env.API_KEY
+
   // Buscar a previsão do tempo para a cidade digitada
   async function fetchWeather(cityName) {
     if (!cityName.trim()) {
@@ -31,10 +33,12 @@ function ClimaScreen() {
     setErrorMessage(null);
 
     try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=pt`
-      );
-      const result = await res.json();
+      const response = await fetch(`${api}?=${cityName}&appid=${key}&units=metric&lang=pt`) 
+      // const res = await fetch(
+      //   `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=pt`
+      // );
+      const result = await response.json();
+      console.log("apijjhhh", result)
 
       if (result.cod !== 200) {
         setErrorMessage('Cidade não encontrada.');
