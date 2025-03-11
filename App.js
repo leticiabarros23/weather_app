@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FavoritesScreen from './FavoritesScreen';
 import ConfiguracaoScreen from './ConfiguracaoScreen'; 
 import { ThemeProvider, useTheme } from './themeContext'; // Importa o contexto do tema
+import CONFIG from './config'
 
 
 // Defina a função ClimaScreen separada do componente de navegação
@@ -19,8 +20,8 @@ function ClimaScreen() {
   const [errorMessage, setErrorMessage] = useState(null);
   const { theme } = useTheme(); // Obtém o tema atual
   
-  const api = process.env.BASE_URL
-  const key = process.env.API_KEY
+  const api = CONFIG.BASE_URL;
+  const key = CONFIG.API_KEY;
 
   // Buscar a previsão do tempo para a cidade digitada
   async function fetchWeather(cityName) {
@@ -32,12 +33,14 @@ function ClimaScreen() {
     setLoading(true);
     setErrorMessage(null);
 
+    console.log("api", api);
+
     try {
-      const response = await fetch(`${api}?=${cityName}&appid=${key}&units=metric&lang=pt`) 
-      // const res = await fetch(
-      //   `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=pt`
-      // );
-      const result = await response.json();
+      const res = await fetch(
+        `${CONFIG.BASE_URL}?q=${cityName}&appid=${CONFIG.API_KEY}&units=metric&lang=pt`
+      ); 
+
+      const result = await res.json();
       console.log("apijjhhh", result)
 
       if (result.cod !== 200) {
