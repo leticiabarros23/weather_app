@@ -4,16 +4,17 @@ import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from './themeContext';
+import CONFIG from './config';  
 
-const API_KEY = '3d35324ff41939a57ae1b49008d79924';
 
 export default function FavoritesScreen() {
   const [favoriteCities, setFavoriteCities] = useState([]);
-  const [loadingCity, setLoadingCity] = useState(null); 
+  const [loadingCity, setLoadingCity] = useState(null);
   const navigation = useNavigation();
   const { theme } = useTheme();
 
-  // Carregar cidades favoritas ao abrir a tela
+
+
   useEffect(() => {
     const loadFavorites = async () => {
       try {
@@ -26,28 +27,31 @@ export default function FavoritesScreen() {
       }
     };
 
+
     const unsubscribe = navigation.addListener('focus', loadFavorites);
     return unsubscribe;
   }, [navigation]);
 
+
+  
   async function updateWeather(cityName) {
-    setLoadingCity(cityName); // Ativa o indicador de carregamento para essa cidade específica
+    setLoadingCity(cityName);
     try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=pt`
-      );
+      const res = await fetch(`${CONFIG.BASE_URL}?q=${cityName}&appid=${CONFIG.API_KEY}&units=metric&lang=pt`);
       const result = await res.json();
+
 
       if (result.cod === 200) {
         const updatedCities = favoriteCities.map(city =>
           city.name === cityName
             ? {
                 ...city,
-                temp: Math.round(result.main.temp), // Atualiza temperatura
-                description: result.weather[0].description, // Atualiza descrição do clima
+                temp: Math.round(result.main.temp), 
+                description: result.weather[0].description,
               }
             : city
         );
+
 
         await AsyncStorage.setItem('favoriteCities', JSON.stringify(updatedCities));
         setFavoriteCities(updatedCities);
@@ -57,9 +61,11 @@ export default function FavoritesScreen() {
     } catch (error) {
       console.error('Erro ao atualizar clima:', error);
     }
-    setLoadingCity(null); // Desativa o indicador de carregamento
+    setLoadingCity(null);
   }
 
+
+ 
   async function removeFavorite(cityName) {
     try {
       const updatedCities = favoriteCities.filter(city => city.name !== cityName);
@@ -70,9 +76,11 @@ export default function FavoritesScreen() {
     }
   }
 
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}> 
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Text style={[styles.header, { color: theme.text }]}>Cidades Favoritas</Text>
+
 
       {favoriteCities.length === 0 ? (
         <Text style={[styles.emptyText, { color: theme.text }]}>Nenhuma cidade favoritada ainda.</Text>
@@ -81,7 +89,7 @@ export default function FavoritesScreen() {
           data={favoriteCities}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <View style={[styles.favoriteItem, { backgroundColor: theme.cardBackground }]}> 
+            <View style={[styles.favoriteItem, { backgroundColor: theme.cardBackground }]}>
               <View style={styles.cityButton}>
                 <Feather name="star" size={20} color="gold" />
                 <View>
@@ -93,7 +101,8 @@ export default function FavoritesScreen() {
                 </View>
               </View>
 
-              {/* Botão de atualizar clima */}
+
+              {/*  Botão de atualizar clima */}
               <TouchableOpacity onPress={() => updateWeather(item.name)} style={styles.updateButton}>
                 {loadingCity === item.name ? (
                   <ActivityIndicator size="small" color={theme.text} />
@@ -102,7 +111,8 @@ export default function FavoritesScreen() {
                 )}
               </TouchableOpacity>
 
-              {/*  Botão de remover cidade */}
+
+              {/* 🔹 Botão de remover cidade */}
               <TouchableOpacity onPress={() => removeFavorite(item.name)}>
                 <Feather name="trash-2" size={20} color="red" />
               </TouchableOpacity>
@@ -113,6 +123,7 @@ export default function FavoritesScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -163,3 +174,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 });
+
+
+
+
